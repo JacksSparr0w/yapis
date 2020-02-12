@@ -1,4 +1,5 @@
-// Generated from C:/Users/Katsuba_V/IdeaProjects/yapis/src/main/resources\stringland.g4 by ANTLR 4.8
+// Generated from /home/vadim/IdeaProjects/yapis/src/main/resources/stringland.g4 by ANTLR 4.8
+package com.antlr;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -45,4 +46,11 @@ public class stringlandBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitShow(stringlandParser.ShowContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitVar(stringlandParser.VarContext ctx) { return visitChildren(ctx); }
 }

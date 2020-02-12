@@ -1,4 +1,5 @@
-// Generated from C:/Users/Katsuba_V/IdeaProjects/yapis/src/main/resources\stringland.g4 by ANTLR 4.8
+// Generated from /home/vadim/IdeaProjects/yapis/src/main/resources/stringland.g4 by ANTLR 4.8
+package com.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -70,6 +71,18 @@ public class stringlandBaseListener implements stringlandListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitShow(stringlandParser.ShowContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVar(stringlandParser.VarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVar(stringlandParser.VarContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

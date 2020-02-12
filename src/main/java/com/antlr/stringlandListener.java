@@ -1,4 +1,5 @@
-// Generated from C:/Users/Katsuba_V/IdeaProjects/yapis/src/main/resources\stringland.g4 by ANTLR 4.8
+// Generated from /home/vadim/IdeaProjects/yapis/src/main/resources/stringland.g4 by ANTLR 4.8
+package com.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -56,4 +57,14 @@ public interface stringlandListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitShow(stringlandParser.ShowContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link stringlandParser#var}.
+	 * @param ctx the parse tree
+	 */
+	void enterVar(stringlandParser.VarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link stringlandParser#var}.
+	 * @param ctx the parse tree
+	 */
+	void exitVar(stringlandParser.VarContext ctx);
 }

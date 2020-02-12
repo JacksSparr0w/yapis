@@ -1,8 +1,9 @@
 grammar stringland;
-statement : set | show | make | concat;
-concat: (VAR) 'concat' (VAR);
+statement : set | show | make | concat | var;
+concat: STRING 'concat' STRING;
 make: 'make' statement;
-set : VAR 'set' VAR;
-show : 'show' (VAR) ;
-VAR : [a-z0-9]+ ;
+set : STRING 'set' STRING;
+show : 'show' STRING;
+var : 'var' STRING;
+STRING : [a-z0-9]+ ;
 WS : [ \n\t]+ -> skip;

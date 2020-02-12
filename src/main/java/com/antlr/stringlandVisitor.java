@@ -1,4 +1,5 @@
-// Generated from C:/Users/Katsuba_V/IdeaProjects/yapis/src/main/resources\stringland.g4 by ANTLR 4.8
+// Generated from /home/vadim/IdeaProjects/yapis/src/main/resources/stringland.g4 by ANTLR 4.8
+package com.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -39,4 +40,10 @@ public interface stringlandVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitShow(stringlandParser.ShowContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link stringlandParser#var}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(stringlandParser.VarContext ctx);
 }
