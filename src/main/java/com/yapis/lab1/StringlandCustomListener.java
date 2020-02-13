@@ -1,7 +1,7 @@
 package com.yapis.lab1;
 
-import com.antlr.stringlandBaseListener;
-import com.antlr.stringlandParser;
+import com.yapis.lab1.antlr.StringLandBaseListener;
+import com.yapis.lab1.antlr.StringLandParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -10,9 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 
-public class StringlandCustomListener extends stringlandBaseListener {
+public class StringlandCustomListener extends StringLandBaseListener {
     private static final Logger logger = LogManager.getLogger(Stringland.class);
 
     /**
@@ -26,64 +25,83 @@ public class StringlandCustomListener extends stringlandBaseListener {
         this.variables = new HashMap<String, String>();
         logger.log(Level.INFO, "Constructor");
     }
+
     @Override
-    public void enterStatement(stringlandParser.StatementContext ctx) {
+    public void enterProgram(StringLandParser.ProgramContext ctx) {
+        super.enterProgram(ctx);
+    }
+
+    @Override
+    public void exitProgram(StringLandParser.ProgramContext ctx) {
+        super.exitProgram(ctx);
+    }
+
+    @Override
+    public void enterStatement(StringLandParser.StatementContext ctx) {
         logger.log(Level.INFO, "Enter statement");
         super.enterStatement(ctx);
     }
 
     @Override
-    public void exitStatement(stringlandParser.StatementContext ctx) {
+    public void exitStatement(StringLandParser.StatementContext ctx) {
         logger.log(Level.INFO, "Exit statement");
-
         super.exitStatement(ctx);
     }
 
     @Override
-    public void enterConcat(stringlandParser.ConcatContext ctx) {
+    public void enterExpression(StringLandParser.ExpressionContext ctx) {
+        super.enterExpression(ctx);
+    }
+
+    @Override
+    public void exitExpression(StringLandParser.ExpressionContext ctx) {
+        super.exitExpression(ctx);
+    }
+
+    @Override
+    public void enterTimes(StringLandParser.TimesContext ctx) {
+        super.enterTimes(ctx);
+    }
+
+    @Override
+    public void exitTimes(StringLandParser.TimesContext ctx) {
+        super.exitTimes(ctx);
+    }
+
+    @Override
+    public void enterConcat(StringLandParser.ConcatContext ctx) {
         super.enterConcat(ctx);
     }
 
     @Override
-    public void exitConcat(stringlandParser.ConcatContext ctx) {
+    public void exitConcat(StringLandParser.ConcatContext ctx) {
         super.exitConcat(ctx);
     }
 
     @Override
-    public void enterMake(stringlandParser.MakeContext ctx) {
-        super.enterMake(ctx);
-    }
-
-    @Override
-    public void exitMake(stringlandParser.MakeContext ctx) {
-        super.exitMake(ctx);
-    }
-
-    @Override
-    public void enterSet(stringlandParser.SetContext ctx) {
+    public void enterSet(StringLandParser.SetContext ctx) {
         logger.log(Level.INFO, "Enter set");
         super.enterSet(ctx);
     }
 
     @Override
-    public void exitSet(stringlandParser.SetContext ctx) {
+    public void exitSet(StringLandParser.SetContext ctx) {
         logger.log(Level.INFO, "Exit set");
-        List<TerminalNode> vars = ctx.STRING();
-        if (vars.size() == 2){
-            variables.put(vars.get(0).getText(), vars.get(1).getText());
+        if (ctx.var() != null){
+            variables.put(ctx.var().STRING().getText(), ctx.expression().getText());
         } else {
             //TODO: Illegal statement
         }
     }
 
     @Override
-    public void enterShow(stringlandParser.ShowContext ctx) {
+    public void enterShow(StringLandParser.ShowContext ctx) {
         logger.log(Level.INFO, "Enter show");
         super.enterShow(ctx);
     }
 
     @Override
-    public void exitShow(stringlandParser.ShowContext ctx) {
+    public void exitShow(StringLandParser.ShowContext ctx) {
         logger.log(Level.INFO, "Exit show");
         if (ctx.STRING() != null){
             if (variables.containsKey(ctx.STRING().getText())){
@@ -97,13 +115,13 @@ public class StringlandCustomListener extends stringlandBaseListener {
     }
 
     @Override
-    public void enterVar(stringlandParser.VarContext ctx) {
+    public void enterVar(StringLandParser.VarContext ctx) {
         logger.log(Level.INFO, "Enter var");
         super.enterVar(ctx);
     }
 
     @Override
-    public void exitVar(stringlandParser.VarContext ctx) {
+    public void exitVar(StringLandParser.VarContext ctx) {
         logger.log(Level.INFO, "Exit var");
         super.exitVar(ctx);
     }
