@@ -29,12 +29,6 @@ public interface StringLandVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpression(StringLandParser.ExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link StringLandParser#times}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTimes(StringLandParser.TimesContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link StringLandParser#concat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

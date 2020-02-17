@@ -1,14 +1,11 @@
 grammar StringLand;
 
 program : statement+;
-statement : set | show | expression;
-expression : concat | times | STRING;
-
-times: STRING 'times' INT;
-concat: STRING 'concat' STRING;
-set : var 'set' expression;
-show : 'show' (STRING | expression);
-var : 'var' STRING;
+statement : set | show | expression ;
+expression : STRING | concat ;
+concat : '(' expression 'CONCAT' expression ')';
+set : var 'SET' expression;
+show : 'SHOW' expression;
+var : 'VAR' STRING;
 STRING : [a-z0-9]+ ;
-INT : [0-9]+ ;
 WS : [ \n\t]+ -> skip;

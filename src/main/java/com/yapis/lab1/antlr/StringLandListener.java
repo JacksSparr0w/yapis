@@ -38,16 +38,6 @@ public interface StringLandListener extends ParseTreeListener {
 	 */
 	void exitExpression(StringLandParser.ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link StringLandParser#times}.
-	 * @param ctx the parse tree
-	 */
-	void enterTimes(StringLandParser.TimesContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link StringLandParser#times}.
-	 * @param ctx the parse tree
-	 */
-	void exitTimes(StringLandParser.TimesContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link StringLandParser#concat}.
 	 * @param ctx the parse tree
 	 */

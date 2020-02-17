@@ -10,6 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class StringlandCustomListener extends StringLandBaseListener {
     private static final Logger logger = LogManager.getLogger(Stringland.class);
@@ -20,9 +23,11 @@ public class StringlandCustomListener extends StringLandBaseListener {
      * the second string it's a value ot the variable
      */
     private HashMap<String, String> variables;
+    private Stack stack;
 
-    public StringlandCustomListener(){
+    public StringlandCustomListener() {
         this.variables = new HashMap<String, String>();
+        this.stack = new Stack();
         logger.log(Level.INFO, "Constructor");
     }
 
@@ -50,32 +55,47 @@ public class StringlandCustomListener extends StringLandBaseListener {
 
     @Override
     public void enterExpression(StringLandParser.ExpressionContext ctx) {
+        logger.log(Level.INFO, "Enter expression");
+
         super.enterExpression(ctx);
     }
 
     @Override
     public void exitExpression(StringLandParser.ExpressionContext ctx) {
+        logger.log(Level.INFO, "Exit expression");
+
         super.exitExpression(ctx);
     }
 
     @Override
-    public void enterTimes(StringLandParser.TimesContext ctx) {
-        super.enterTimes(ctx);
-    }
-
-    @Override
-    public void exitTimes(StringLandParser.TimesContext ctx) {
-        super.exitTimes(ctx);
-    }
-
-    @Override
     public void enterConcat(StringLandParser.ConcatContext ctx) {
-        super.enterConcat(ctx);
+        logger.log(Level.INFO, "enter concat");
+
     }
 
     @Override
     public void exitConcat(StringLandParser.ConcatContext ctx) {
-        super.exitConcat(ctx);
+        logger.log(Level.INFO, "exit concat");
+        List<StringLandParser.ExpressionContext> nodes = ctx.expression();
+        String string = nodes.stream()
+                .map(StringLandParser.ExpressionContext::STRING)
+                .map(this::findText)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining());
+        stack.push(string);
+    }
+
+    private String findText(TerminalNode node) {
+        if (node == null) {
+            if (!stack.isEmpty()) {
+                return stack.get();
+            }
+            return "";
+        }
+        if (variables.containsKey(node.getText())) {
+            return variables.get(node.getText());
+        }
+        return node.getText();
     }
 
     @Override
@@ -87,11 +107,20 @@ public class StringlandCustomListener extends StringLandBaseListener {
     @Override
     public void exitSet(StringLandParser.SetContext ctx) {
         logger.log(Level.INFO, "Exit set");
-        if (ctx.var() != null){
-            variables.put(ctx.var().STRING().getText(), ctx.expression().getText());
+        String value;
+        if (stack.isEmpty()) {
+            value = ctx.expression().getText();
+        } else {
+            value = stack.get();
+        }
+
+        if (ctx.var() != null) {
+            variables.put(ctx.var().STRING().getText(), value);
         } else {
             //TODO: Illegal statement
         }
+
+
     }
 
     @Override
@@ -103,14 +132,12 @@ public class StringlandCustomListener extends StringLandBaseListener {
     @Override
     public void exitShow(StringLandParser.ShowContext ctx) {
         logger.log(Level.INFO, "Exit show");
-        if (ctx.STRING() != null){
-            if (variables.containsKey(ctx.STRING().getText())){
-                System.out.println(variables.get(ctx.STRING().getText()));
+        if (ctx.expression() != null) {
+            if (variables.containsKey(ctx.expression().getText())) {
+                System.out.println("SHOW VAR " + variables.get(ctx.expression().getText()));
             } else {
-                //TODO: Unknown var
+                System.out.println("SHOW " + ctx.expression().getText());
             }
-        } else {
-            //TODO: Empty var
         }
     }
 
@@ -123,6 +150,9 @@ public class StringlandCustomListener extends StringLandBaseListener {
     @Override
     public void exitVar(StringLandParser.VarContext ctx) {
         logger.log(Level.INFO, "Exit var");
+        if (ctx.STRING() != null) {
+            variables.put(ctx.STRING().getText(), null);
+        }
         super.exitVar(ctx);
     }
 
@@ -143,6 +173,7 @@ public class StringlandCustomListener extends StringLandBaseListener {
 
     @Override
     public void visitErrorNode(ErrorNode node) {
+        logger.log(Level.ERROR, "Error: " + node.getText());
         super.visitErrorNode(node);
     }
 }

@@ -12,11 +12,15 @@ import org.apache.logging.log4j.Logger;
 public class Stringland {
     private static final Logger logger = LogManager.getLogger(Stringland.class);
     private static final String input =
-            "var a set stringa\n" +
-                    "var b set stringb\n" +
-                    "show a\n" +
-                    "show b\n" +
-                    "show b\n";
+            "VAR a SET stringa\n" +
+                    "VAR b SET stringb\n" +
+                    "VAR c SET (a CONCAT b)\n" +
+                    "VAR d SET ((a CONCAT b) CONCAT c)\n" +
+                    "SHOW a\n" +
+                    "SHOW b\n" +
+                    "SHOW c\n" +
+                    "SHOW d\n" +
+                    "SHOW unknown var";
 
     public static void main(String... arg) {
         StringLandLexer lexer = new StringLandLexer(CharStreams.fromString(input));
@@ -24,6 +28,7 @@ public class Stringland {
         StringLandParser parser = new StringLandParser(tokens);
         ParseTree tree = parser.program();
         ParseTreeWalker walker = new ParseTreeWalker();
+        System.out.println(tree.toStringTree(parser));
         walker.walk(new StringlandCustomListener(), tree);
     }
 }

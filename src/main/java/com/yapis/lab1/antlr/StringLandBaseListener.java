@@ -52,18 +52,6 @@ public class StringLandBaseListener implements StringLandListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTimes(StringLandParser.TimesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTimes(StringLandParser.TimesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterConcat(StringLandParser.ConcatContext ctx) { }
 	/**
 	 * {@inheritDoc}
