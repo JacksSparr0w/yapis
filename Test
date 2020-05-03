@@ -1,0 +1,47 @@
+program
+start
+int var = 2 + 3 * 5 + 3;
+int a = 1;
+int b = 2;
+
+String one = "dif" ;
+
+String e = "ference" ;
+
+String str = "sss" + "ddd";
+
+procedure printSum (int a )
+for (int i = 0;; i < 5; i ++)print(a);
+endfor
+end
+
+procedure printStr (String str )
+for (int i = 0;; i < 5; i ++)
+print(str);
+endfor
+end
+
+function int sumInFunc (int a,int b)
+int c = a + b;
+return c;
+
+function int sum (int a,int b)
+int var = a + b;
+int s = sumInFunc(var,b);;
+return s;
+
+function String difStr (String a,String b)
+String var = a + b;
+return var;
+
+printSum(var);
+
+printStr (str);
+
+int s = sum(a,b);;
+
+String result = difStr(one,e);;
+
+print(result)
+
+finish
