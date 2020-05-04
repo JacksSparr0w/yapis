@@ -1,4 +1,4 @@
-# My language for strings amd a litle bit for numbers :)
+# My language for strings and little bit for a numbers :)
 
 How to install
 
