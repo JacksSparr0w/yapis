@@ -12,7 +12,7 @@ options {
 
 @members {
     private GrammaHandler handler = new GrammaHandler();
-    private SadouskiParser parser = new SadouskiParser();
+    private SadouskiParser parser = new MyParser();
     }
 
 

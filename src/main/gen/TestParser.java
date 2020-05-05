@@ -1,4 +1,4 @@
-package main.gen;// Generated from /home/litvin/IdeaProjects/ANTLR/gen/generated/Test.g4 by ANTLR 4.5
+package main.gen;
 
     import main.handle.GrammaHandler;
     import main.handle.MyParser;
