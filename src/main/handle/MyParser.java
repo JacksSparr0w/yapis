@@ -95,6 +95,9 @@ public class MyParser {
             case "endcase":
                 builder.append("\nbreak;");
                 break;
+            case "block":
+                builder.append("\n{");
+                break;
         }
         checkFunc(scope, builder.toString());
     }

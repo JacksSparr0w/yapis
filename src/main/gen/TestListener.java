@@ -133,6 +133,16 @@ public interface TestListener extends ParseTreeListener {
 	 */
 	void exitSwitchstatement(TestParser.SwitchstatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TestParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(TestParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TestParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(TestParser.BlockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TestParser#procedure}.
 	 * @param ctx the parse tree
 	 */

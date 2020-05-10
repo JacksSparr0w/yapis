@@ -6,13 +6,18 @@ String yes = "caseOne";
 String str = "caseTwo";
 String def = "defaultCase";
 
-switch a:
-case 1: print(yes);
+switch yes:
+case "caseOne": print(yes);
 endcase
-case 2: print(str);
+case "caseONO": print(str);
 endcase
 default: print(def);
 endcase
 endswitch
+
+[
+int b = 10;
+print(b);
+]
 
 finish

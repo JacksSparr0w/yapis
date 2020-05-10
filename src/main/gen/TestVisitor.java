@@ -84,6 +84,12 @@ public interface TestVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSwitchstatement(TestParser.SwitchstatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TestParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(TestParser.BlockContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TestParser#procedure}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

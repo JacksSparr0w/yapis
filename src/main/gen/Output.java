@@ -1,35 +1,44 @@
 package main.gen;
 
+import org.w3c.dom.*;import static main.gen.Functions.*;
+
+
 public class Output {
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        int a = 1;
+int a = 1;
 
-        String yes = "caseOne";
+String yes = "caseOne";
 
-        String str = "caseTwo";
+String str = "caseTwo";
 
-        String def = "defaultCase";
+String def = "defaultCase";
 
-        switch (a) {
+switch (yes) {
 
-            case 1:
+case "caseOne":
 
-                System.out.println(yes);
+System.out.println(yes);
 
-                break;
+break;
 
-            case 2:
+case "caseONO":
 
-                System.out.println(str);
+System.out.println(str);
 
-                break;
+break;
 
-            default:
+default: 
 
-                System.out.println(def);
+System.out.println(def);
 
-                break;
-        }
-    }
+break;
+}
+
+{
+
+int b = 10;
+System.out.println(b);
+}
+	}
 }

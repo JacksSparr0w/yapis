@@ -93,6 +93,7 @@ statement
     |   whilestatement
     |   forstatement
     |   switchstatement
+    |   block
     ;
 
 ifstatement
@@ -164,6 +165,17 @@ switchstatement
              'endswitch' WS* {parser.closeRelation(handler.scope);}
     ;
 
+block
+    :   '[' WS* {parser.makeRelationHeader("", "", "block", handler.scope);}
+        (WS*
+         variable
+                 | expression {parser.makeRelationBody($expression.val, handler.scope);} WS*
+                 | function_call
+                 | statement
+                 | print
+         WS* ';' )* WS*
+        ']' WS* {parser.closeRelation(handler.scope);}
+    ;
 //-------------
     procedure
     	:	'procedure' WS+ name {handler.scope = $name.text;}
