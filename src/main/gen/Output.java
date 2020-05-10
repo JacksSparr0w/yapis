@@ -1,31 +1,35 @@
 package main.gen;
 
-import org.w3c.dom.*;import static main.gen.Functions.*;
-
-
 public class Output {
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-int var = 2 + 3 * 5 + 3;
+        int a = 1;
 
-int a = 1;
+        String yes = "caseOne";
 
-int b = 2;
+        String str = "caseTwo";
 
-String one = "dif";
+        String def = "defaultCase";
 
-String e = "ference";
+        switch (a) {
 
-String str = "sss"+ "ddd";
-sumInFunc(var,b);
-printSum(var);
-printStr(str);
-sum(a,b);
+            case 1:
 
-int s = sum (a,b);
-difStr(one,e);
+                System.out.println(yes);
 
-String result = difStr (one,e);
-System.out.println(result);
-  }
+                break;
+
+            case 2:
+
+                System.out.println(str);
+
+                break;
+
+            default:
+
+                System.out.println(def);
+
+                break;
+        }
+    }
 }

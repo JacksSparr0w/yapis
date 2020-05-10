@@ -17,6 +17,7 @@ public class MyParser {
     private File functionFile;
     private StringBuilder appender = new StringBuilder();
     public boolean appenderFlag = false;
+    private String log = "";
 
     public MyParser() {
         outputFile = new File("D:/япис/Compiler/src/main/gen/Output.java");
@@ -32,27 +33,27 @@ public class MyParser {
         StringBuilder builder = new StringBuilder();
         LinkedList<Variable> listOfVars = findVarByScope(scope);
         for (Variable var : listOfVars) {
-            builder.append("\n" + var.getType() + " "+ var.getName() + " = " + var.getValue() + ";");
+            builder.append("\n" + var.getType() + " " + var.getName() + " = " + var.getValue() + ";");
         }
         checkFunc(scope, builder.toString());
     }
 
-    public String getMathSign(String typeVar, String sign, String firstVal, String secondVal){
+    public String getMathSign(String typeVar, String sign, String firstVal, String secondVal) {
         String math;
         if (typeVar.equals("String")) {
-            math = makeMathStr(sign,firstVal, secondVal);
+            math = makeMathStr(sign, firstVal, secondVal);
         } else {
             math = makeMathInt(sign) + " " + secondVal;
         }
-       return math;
+        return math;
     }
 
     private String makeMathStr(String sign, String firstVal, String secondVal) {
         String mathSign = new String();
-        if (sign.equals("+")){
+        if (sign.equals("+")) {
             mathSign = "+ " + secondVal;
         } else if (sign.equals("-")) {
-            mathSign = ".replaceAll("+ firstVal + "," + secondVal + ")";
+            mathSign = ".replaceAll(" + firstVal + "," + secondVal + ")";
         }
         return mathSign;
     }
@@ -64,7 +65,7 @@ public class MyParser {
     private LinkedList findVarByScope(String scope) {
         LinkedList list = new LinkedList();
         HashMap vars = Memory.vars;
-        for (Map.Entry<String, Variable> entry :(Set<Map.Entry>) vars.entrySet()) {
+        for (Map.Entry<String, Variable> entry : (Set<Map.Entry>) vars.entrySet()) {
             if (entry.getValue().getScope().equals(scope) && !entry.getValue().isAssignment()) {
                 list.add(entry.getValue());
                 entry.getValue().setAssignment(true);
@@ -75,10 +76,25 @@ public class MyParser {
 
     public void makeRelationHeader(String firstArg, String secondArg, String typeOfRel, String scope) {
         StringBuilder builder = new StringBuilder();
-        if (typeOfRel.equals("if")) {
-            builder.append("\nif (" + firstArg + ".equals(" + secondArg + ")) {\n");
-        } else if (typeOfRel.equals("while")) {
-            builder.append("\nwhile (" + firstArg + ".equals(" + secondArg + ")) {\n");
+        switch (typeOfRel) {
+            case "if":
+                builder.append("\nif (" + firstArg + ".equals(" + secondArg + ")) {\n");
+                break;
+            case "while":
+                builder.append("\nwhile (" + firstArg + ".equals(" + secondArg + ")) {\n");
+                break;
+            case "switch":
+                builder.append("\nswitch (" + firstArg + ") {");
+                break;
+            case "case":
+                builder.append("\ncase " + firstArg + ":\n");
+                break;
+            case "default":
+                builder.append("\ndefault: \n");
+                break;
+            case "endcase":
+                builder.append("\nbreak;");
+                break;
         }
         checkFunc(scope, builder.toString());
     }
@@ -119,7 +135,7 @@ public class MyParser {
         writeInFile(builder.toString(), functionFile);
     }
 
-    public void closeFunc(String expression){
+    public void closeFunc(String expression) {
         writeInFile("return " + expression + ";\n}", functionFile);
     }
 
@@ -128,6 +144,7 @@ public class MyParser {
     }
 
     private void writeInFile(String str, File file) {
+        log += str;
         try {
             FileWriter writer = new FileWriter(file, true);
             writer.write(str + "\n");
@@ -149,7 +166,8 @@ public class MyParser {
     }
 
     private void checkFunc(String scope, String s) {
-        if (scope.equals("global") || null == scope) {
+        String global = "global";
+        if (global.equals(scope) || null == scope) {
             writeInFile(s, outputFile);
         } else {
             writeInFile(s, functionFile);
@@ -157,7 +175,7 @@ public class MyParser {
     }
 
     public void closeFiles() {
-        writeInFile("  }", outputFile);
+        writeInFile("\t}", outputFile);
         writeInFile("}", outputFile);
         writeInFile("}", functionFile);
     }

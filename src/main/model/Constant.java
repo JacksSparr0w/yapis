@@ -1,8 +1,5 @@
 package main.model;
 
-/**
- * Created by litvin on 21.4.15.
- */
 public class Constant<T> {
 
     private String name;

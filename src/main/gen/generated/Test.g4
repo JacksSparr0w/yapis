@@ -92,6 +92,7 @@ statement
     :   ifstatement
     |   whilestatement
     |   forstatement
+    |   switchstatement
     ;
 
 ifstatement
@@ -137,6 +138,30 @@ forstatement
                  | print
          WS* ';' )* WS*
         'endfor' WS* {parser.closeRelation(handler.scope);}
+    ;
+
+switchstatement
+    :      'switch' WS* expression WS* {parser.makeRelationHeader($expression.val, $expression.val, "switch", handler.scope);}
+            ':' WS*
+                ( WS* 'case' WS* value WS*  {parser.makeRelationHeader($value.val, $value.val, "case", handler.scope);}':' WS*
+                 (WS*
+                          variable
+                                  | expression WS*
+                                  | function_call
+                                  | statement
+                                  | print
+                          WS* ';')* WS*
+                  'endcase' {parser.makeRelationHeader($value.val, $value.val, "endcase", handler.scope);})+ WS*
+                (WS* 'default' WS* {parser.makeRelationHeader($value.val, $value.val, "default", handler.scope);}':' WS*
+                                 (WS*
+                                          variable
+                                                  | expression WS*
+                                                  | function_call
+                                                  | statement
+                                                  | print
+                                          WS* ';')* WS*
+                                   'endcase' {parser.makeRelationHeader($value.val, $value.val, "endcase", handler.scope);})? WS*
+             'endswitch' WS* {parser.closeRelation(handler.scope);}
     ;
 
 //-------------
