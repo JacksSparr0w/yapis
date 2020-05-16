@@ -39,7 +39,7 @@ variable
           | expression  {handler.getVarByName($name.text).setValue($expression.val);}
           | function_call {handler.getVarByName($name.text).setValue($function_call.val);}
     )?
-    )* WS* ';' WS* {parser.writeVariables(handler.scope);}
+    )* WS* ';' WS* {parser.writeVariable($name.text, handler.scope);}
     ;
 
 type
@@ -166,7 +166,7 @@ switchstatement
     ;
 
 block
-    :   '[' WS* {parser.makeRelationHeader("", "", "block", handler.scope);}
+    :   WS* 'block' WS* name WS* '[' {handler.scope = "block" + $name.text;} {parser.makeBlockHeader(handler.scope);}
         (WS*
          variable
                  | expression {parser.makeRelationBody($expression.val, handler.scope);} WS*
@@ -174,30 +174,30 @@ block
                  | statement
                  | print
          WS* ';' )* WS*
-        ']' WS* {parser.closeRelation(handler.scope);}
+        ']' WS*  {parser.closeBlock(handler.scope);} {handler.scope = "global";}
     ;
 //-------------
     procedure
-    	:	'procedure' WS+ name {handler.scope = $name.text;}
-    	    WS* '(' WS* parameters?  WS*')' {parser.makeProcedureHeader($name.text, $parameters.val);} WS*
+    	:	'procedure' WS+ name {handler.scope = "block" + $name.text;}
+    	    WS* '(' WS* parameters?  WS*')' {parser.makeProcedureHeader($name.text, $parameters.val, handler.scope);} WS*
     		(variable
                      | expression WS*
                      | function_call
                      | statement
                      | print)* WS*
-    		'end' {parser.closeProcedure();} {handler.scope = "global";}WS*
+    		'end' {parser.closeProcedure(handler.scope);} {handler.scope = "global";}WS*
     	;
 
 
     function returns[String val]
     	:	'function' WS+ type WS+ name {handler.scope = $name.text;}
-    	WS* '(' WS* parameters? WS* ')' {parser.makeFuncHeader($type.text + " " + $name.text, $parameters.val);} WS*
+    	WS* '(' WS* parameters? WS* ')' {parser.makeFuncHeader($type.text + " " + $name.text, $parameters.val, handler.scope);} WS*
     		(variable
                      | expression WS*
                      | function_call
                      | statement
                      | print)* WS*
-    		'return' WS+ expression WS* ';' {parser.closeFunc($expression.val);} {handler.scope = "global";} WS*
+    		'return' WS+ expression WS* ';' {parser.closeFunc($expression.val, handler.scope);} {handler.scope = "global";} WS*
        	;
 
     function_call returns[String val]

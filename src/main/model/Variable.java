@@ -14,6 +14,10 @@ public class Variable<T> {
         this.scope = scope;
     }
 
+    public Variable(Variable<T> variable){
+        this(variable.name, variable.type, variable.value, variable.scope);
+    }
+
     public boolean isAssignment() {
         return assignment;
     }

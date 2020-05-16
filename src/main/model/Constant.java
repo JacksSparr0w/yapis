@@ -24,10 +24,6 @@ public class Constant<T> {
         return value;
     }
 
-    public static void fuuu(){
-
-    };
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,10 +1,9 @@
 package main.handle;
 
-import main.model.Constant;
 import main.model.Memory;
 import main.model.Variable;
 
-import java.util.HashMap;
+import java.util.Collection;
 
 public class GrammaHandler {
 
@@ -15,19 +14,18 @@ public class GrammaHandler {
     }
 
     public Variable getVar(Variable variable) {
-        return Memory.vars.get(variable.getName());
+        return findVarByScope(Memory.vars.get(variable.getName()));
     }
 
     public Variable getVarByName(String name) {
-        return Memory.vars.get(name);
+        return findVarByScope(Memory.vars.get(name));
     }
 
-    public static void test() {
-        HashMap vars = Memory.vars;
-        System.out.println("ok");
+    private Variable findVarByScope(Collection<Variable> vars) {
+        return vars.stream().filter(var -> var.getScope().equals(scope)).findFirst().orElseGet(null);
     }
 
-    public static void main(String[] args) {
-        test();
+    public void test(){
+
     }
 }

@@ -6,10 +6,8 @@ import main.model.Variable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MyParser {
 
@@ -29,12 +27,12 @@ public class MyParser {
         writeInFile(s, outputFile);
     }
 
-    public void writeVariables(String scope) {
+    public void writeVariable(String name, String scope) {
         StringBuilder builder = new StringBuilder();
-        LinkedList<Variable> listOfVars = findVarByScope(scope);
-        for (Variable var : listOfVars) {
-            builder.append("\n" + var.getType() + " " + var.getName() + " = " + var.getValue() + ";");
-        }
+        Memory.vars.get(name).stream()
+                .filter(var -> var.getScope().equals(scope) && !var.isAssignment())
+                .peek(var -> var.setAssignment(true))
+                .forEach(var -> builder.append("\n" + var.getType() + " " + var.getName() + " = " + var.getValue() + ";"));
         checkFunc(scope, builder.toString());
     }
 
@@ -62,16 +60,16 @@ public class MyParser {
         return sign;
     }
 
-    private LinkedList findVarByScope(String scope) {
-        LinkedList list = new LinkedList();
-        HashMap vars = Memory.vars;
-        for (Map.Entry<String, Variable> entry : (Set<Map.Entry>) vars.entrySet()) {
-            if (entry.getValue().getScope().equals(scope) && !entry.getValue().isAssignment()) {
-                list.add(entry.getValue());
-                entry.getValue().setAssignment(true);
-            }
-        }
-        return list;
+    private List<Variable> findVarByScope(String scope) {
+        return Memory.vars.entries().stream()
+                .map(Map.Entry::getValue)
+                .filter(var -> var.getScope().equals(scope) && !var.isAssignment())
+                .collect(Collectors.toList());
+    }
+
+    private boolean existNameInScope(String scope, String name) {
+        return Memory.vars.get(name).stream()
+                .anyMatch(var -> var.getScope().equals(scope));
     }
 
     public void makeRelationHeader(String firstArg, String secondArg, String typeOfRel, String scope) {
@@ -94,9 +92,6 @@ public class MyParser {
                 break;
             case "endcase":
                 builder.append("\nbreak;");
-                break;
-            case "block":
-                builder.append("\n{");
                 break;
         }
         checkFunc(scope, builder.toString());
@@ -122,23 +117,38 @@ public class MyParser {
         checkFunc(scope, builder.toString());
     }
 
-    public void makeProcedureHeader(String header, String params) {
+    public void makeProcedureHeader(String header, String params, String scope) {
+        createParamsCopyInScope(scope, findNameInParams(params));
         StringBuilder builder = new StringBuilder();
         builder.append("public static void " + header + " (" + params + ") {");
         writeInFile(builder.toString(), functionFile);
     }
 
-    public void closeProcedure() {
+    public void closeProcedure(String scope) {
+        cleanScope(scope);
         writeInFile("\n}", functionFile);
     }
 
-    public void makeFuncHeader(String header, String params) {
+    public void makeFuncHeader(String header, String params, String scope) {
+        createParamsCopyInScope(scope, findNameInParams(params));
         StringBuilder builder = new StringBuilder();
         builder.append("public static " + header + " (" + params + ") {");
         writeInFile(builder.toString(), functionFile);
     }
 
-    public void closeFunc(String expression) {
+    public void makeBlockHeader(String scope) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        writeInFile(builder.toString(), outputFile);
+    }
+
+    public void closeBlock(String scope) {
+        cleanScope(scope);
+        writeInFile("\n}", outputFile);
+    }
+
+    public void closeFunc(String expression, String scope) {
+        cleanScope(scope);
         writeInFile("return " + expression + ";\n}", functionFile);
     }
 
@@ -169,8 +179,7 @@ public class MyParser {
     }
 
     private void checkFunc(String scope, String s) {
-        String global = "global";
-        if (global.equals(scope) || null == scope) {
+        if ("global".equals(scope) || null == scope || scope.startsWith("block")) {
             writeInFile(s, outputFile);
         } else {
             writeInFile(s, functionFile);
@@ -193,9 +202,41 @@ public class MyParser {
         }
     }
 
+    private void checkVarNameByScope(String scope, String name) {
+        if (!existNameInScope(scope, name)) {
+            System.out.println("Error! Nonexisting name: " + name);
+        }
+    }
+
     public void print(String scope, String name) {
-        System.out.println(scope);
+        checkVarNameByScope(scope, name);
         checkFunc(scope, "System.out.println(" + name + ");");
     }
 
+    private void cleanScope(String scope) {
+        List<Variable> vars = Memory.vars.entries().stream()
+                .filter(entry ->
+                        entry.getValue().getScope().equals(scope)
+                ).map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        vars.forEach(var -> Memory.vars.remove(var.getName(), var));
+    }
+
+    private void createParamsCopyInScope(String scope, List params) {
+        List<Variable> newVars = Memory.vars.entries().stream()
+                .filter(entry ->
+                        params.contains(entry.getValue().getName()))
+                .map(Map.Entry::getValue)
+                .map(var -> new Variable(var))
+                .peek(var -> var.setScope(scope))
+                .collect(Collectors.toList());
+        newVars.forEach(newVar -> Memory.vars.put(newVar.getName(), newVar));
+
+    }
+
+    private List<String> findNameInParams(String params) {
+        List<String> result = new ArrayList<>();
+        Arrays.stream(params.split(",")).forEach(param -> result.add(param.split(" ")[1]));
+        return result;
+    }
 }
