@@ -16,7 +16,7 @@ endcase
 endswitch
 
 block firstBlock [
-int b = 10;
+int b = a + 10;
 print(b);
 ]
 

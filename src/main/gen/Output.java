@@ -6,40 +6,40 @@ import org.w3c.dom.*;import static main.gen.Functions.*;
 public class Output {
   public static void main(String[] args) {
 
-int var = 2 + 3 * 5 + 3;
-
 int a = 1;
 
-int b = 2;
+String yes = "caseOne";
 
-String one = "dif";
+String str = "caseTwo";
 
-String e = "ference";
+String def = "defaultCase";
 
-String str = "sss"+ "ddd";
+switch (yes) {
 
-for (
+case "caseOne":
 
-int i = 0;
-i < 5; i ++) {
-System.out.println(a);
-}
+System.out.println(yes);
 
-for (
+break;
 
-int i = 0;
-i < 5; i ++) {
+case "caseONO":
+
 System.out.println(str);
+
+break;
+
+default: 
+
+System.out.println(def);
+
+break;
 }
-sumInFunc(var,b);
-printSum(var);
-printStr(str);
-sum(a,b);
+{
 
-int s = sum (a,b);
-difStr(one,e);
+int b = a + 10;
+System.out.println(b);
 
-String result = difStr (one,e);
-System.out.println(result);
+}
+System.out.println(b);
 	}
 }

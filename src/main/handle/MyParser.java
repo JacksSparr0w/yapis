@@ -6,7 +6,12 @@ import main.model.Variable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MyParser {
@@ -36,7 +41,13 @@ public class MyParser {
         checkFunc(scope, builder.toString());
     }
 
-    public String getMathSign(String typeVar, String sign, String firstVal, String secondVal) {
+    public String getMathSign(String typeVar, String sign, String firstVal, String secondVal, String scope) {
+        if (isVar(firstVal)){
+            checkVarNameByScope(scope, firstVal);
+        }
+        if (isVar(secondVal)){
+            checkVarNameByScope(scope, secondVal);
+        }
         String math;
         if (typeVar.equals("String")) {
             math = makeMathStr(sign, firstVal, secondVal);
@@ -44,6 +55,12 @@ public class MyParser {
             math = makeMathInt(sign) + " " + secondVal;
         }
         return math;
+    }
+
+    private boolean isVar(String val){
+        Pattern p = Pattern.compile("^[a-zA-Z]*$");
+        Matcher m = p.matcher(val);
+        return m.matches();
     }
 
     private String makeMathStr(String sign, String firstVal, String secondVal) {
@@ -69,10 +86,12 @@ public class MyParser {
 
     private boolean existNameInScope(String scope, String name) {
         return Memory.vars.get(name).stream()
-                .anyMatch(var -> var.getScope().equals(scope));
+                .anyMatch(var -> var.getScope().equals(scope) || var.getScope().equals("global"));
     }
 
     public void makeRelationHeader(String firstArg, String secondArg, String typeOfRel, String scope) {
+        checkVarNameByScope(scope, firstArg);
+        checkVarNameByScope(scope, secondArg);
         StringBuilder builder = new StringBuilder();
         switch (typeOfRel) {
             case "if":
@@ -112,6 +131,10 @@ public class MyParser {
     }
 
     public void makeLoopHeaderParams(String firstArg, String sign, String secondArg, String thirdArg, String scope) {
+        String reg = "[^a-z]";
+        checkVarNameByScope(scope, firstArg.replaceAll(reg, ""));
+        checkVarNameByScope(scope, secondArg.replaceAll(reg, ""));
+        checkVarNameByScope(scope, thirdArg.replaceAll(reg, ""));
         StringBuilder builder = new StringBuilder();
         builder.append(firstArg + " " + sign + " " + secondArg + "; " + thirdArg + ") {");
         checkFunc(scope, builder.toString());
@@ -148,6 +171,7 @@ public class MyParser {
     }
 
     public void closeFunc(String expression, String scope) {
+        checkVarNameByScope(scope, expression);
         cleanScope(scope);
         writeInFile("return " + expression + ";\n}", functionFile);
     }
@@ -203,7 +227,7 @@ public class MyParser {
     }
 
     private void checkVarNameByScope(String scope, String name) {
-        if (!existNameInScope(scope, name)) {
+        if (!name.isEmpty() && isVar(name) && !existNameInScope(scope, name)) {
             System.out.println("Error! Nonexisting name: " + name);
         }
     }

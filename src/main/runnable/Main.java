@@ -14,8 +14,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
-//        File file = new File("TestWithNewFeatures");
-        File file = new File("Test");
+        File file = new File("TestWithNewFeatures");
+//        File file = new File("Test");
         TestLexer testLexer = new TestLexer(new ANTLRInputStream(new FileReader(file)));
         TokenStream tokenStream = new CommonTokenStream(testLexer);
         TestParser parser = new TestParser(tokenStream);

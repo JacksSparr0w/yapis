@@ -64,9 +64,9 @@ expression returns[String val]
     :  WS* s1=value WS* {$val = $s1.text;}
     ( MATH_SYMB WS* (s2=value)* WS* {if ($s2.text!=null) {
                                          if ($s1.typeOfVal.equals("String")){
-                                            $val = $val + parser.getMathSign("String", $MATH_SYMB.text, $val, $s2.text);
+                                            $val = $val + parser.getMathSign("String", $MATH_SYMB.text, $val, $s2.text, handler.scope);
                                             } else {
-                                            $val = $val + " " + parser.getMathSign("Int", $MATH_SYMB.text, $val, $s2.text);
+                                            $val = $val + " " + parser.getMathSign("Int", $MATH_SYMB.text, $val, $s2.text, handler.scope);
                                             }
 
                                          } else {$val = $val + " " + $MATH_SYMB.text;
